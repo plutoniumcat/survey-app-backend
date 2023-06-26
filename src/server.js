@@ -35,6 +35,13 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+// Controllers
+const surveyController = require('./controllers/surveyRoutes');
+app.use('/surveys', surveyController)
+
+const usersController = require('./controllers/usersRoutes');
+app.use('/admin', usersController)
+
 // Routes
 app.get('/', (request, response) => {
     response.json({
