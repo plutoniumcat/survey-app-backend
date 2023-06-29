@@ -38,10 +38,27 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+//Set db url
+var databaseURL = "";
+switch (process.env.NODE_ENV.toLowerCase()) {
+    case "test":
+        databaseURL = "mongodb://localhost:27017/survey-app-test";
+        break;
+    case "development":
+        databaseURL = "mongodb://localhost:27017/survey-app-dev";
+        break;
+    case "production":
+        databaseURL = process.env.DATABASE_URL;
+        break;
+    default:
+        console.error("Incorrect JS environment specified, database will not be connected.");
+        break;
+};
+
 // Connect to the db
 async function dbConnect() {
     try {
-      await mongoose.connect('mongodb://localhost:27017/surveydb');
+      await mongoose.connect(databaseURL);
       console.log("Database connected!");
     } catch (error) {
       console.log(`dbConnect failed, error:`, error);
