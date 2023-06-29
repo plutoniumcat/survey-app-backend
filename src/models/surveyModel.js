@@ -9,7 +9,7 @@ const QuestionSchema = new mongoose.Schema({
 });
 
 const SurveySchema = new mongoose.Schema({
-    name: String,
+    title: String,
     author: {type: mongoose.Types.ObjectId, ref: 'User'},
     description: String,
     makePublic: Boolean,
