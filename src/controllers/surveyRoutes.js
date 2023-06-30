@@ -86,7 +86,8 @@ surveyRouter.get("/createdby/:id", async (request, response) => {
 
 // Create survey
 surveyRouter.post("/create", async (request, response) => {
-    // TODO Add user identity to survey
+    // Add current user identity to submitted survey data
+    request.body.surveyData.author = request.user
     let createdSurvey = await createSurvey(request.body.surveyData)
     response.json({
         survey: createdSurvey
