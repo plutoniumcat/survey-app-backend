@@ -1,11 +1,11 @@
 const express = require('express');
-const { getAllSurveys, getSurveyById, getSurveyByCreatorId } = require('./surveyFunctions');
+const { getAllSurveys, getSurveyById, getSurveyByCreatorId, createSurvey, editSurvey } = require('./surveyFunctions');
 const surveyRouter = express.Router();
 
 // Routes
 // All surveys
 surveyRouter.get("/", async (request, response) => {
-    responseData = await getAllSurveys();
+    let responseData = await getAllSurveys();
     response.json({
         surveys: responseData
     });
@@ -13,7 +13,7 @@ surveyRouter.get("/", async (request, response) => {
 
 // Survey by id
 surveyRouter.get("/:id", async (request, response) => {
-    responseData = await getSurveyById(request.params.id);
+    let responseData = await getSurveyById(request.params.id);
     response.json({
         survey: responseData
     });
@@ -37,7 +37,7 @@ surveyRouter.get("/:id/responses", async (request, response) => {
 
 // Surveys by creator id
 surveyRouter.get("/createdby/:id", async (request, response) => {
-    responseData = await getSurveyByCreatorId(request.params.id);
+    let responseData = await getSurveyByCreatorId(request.params.id);
     response.json({
         survey: responseData
     });
@@ -53,17 +53,17 @@ surveyRouter.get("/responses", async (request, response) => {
 
 // Create survey
 surveyRouter.post("/create", async (request, response) => {
-    // TODO Add functionality
+    let createdSurvey = await createSurvey(request.body.surveyData)
     response.json({
-        message:"Create a survey"
+        survey: createdSurvey
     });
 });
 
 // Edit survey
 surveyRouter.post("/:id/edit", async (request, response) => {
-    // TODO Add functionality
+    let editedSurvey = await editSurvey(request.params.id, request.body.surveyData)
     response.json({
-        message:"Edit a survey"
+        survey: editedSurvey
     });
 });
 
