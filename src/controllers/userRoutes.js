@@ -1,6 +1,6 @@
 const express = require('express');
 const userRouter = express.Router();
-const User = require('../models/userModel')
+const {User} = require('../models/userModel')
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
@@ -75,12 +75,12 @@ userRouter.post("/register", async (request, response) => {
   
     try {
       // Check if the username is already taken
-      const existingUser = await User.findOne({ username });
+      const existingUser = await User.findOne({ username: username });
       if (existingUser) {
         return response.status(400).json({ error: 'Username already exists' });
       }
 
-      const existingEmail = await User.findOne({ email });
+      const existingEmail = await User.findOne({ email: email });
       if (existingEmail) {
         return response.status(400).json({ error: 'Email already exists' });
       }
