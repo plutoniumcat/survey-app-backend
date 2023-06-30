@@ -7,6 +7,10 @@ async function getAllSurveys() {
     return await Survey.find({})
 };
 
+async function getAllPublicSurveys() {
+    return await Survey.where({makePublic: true})
+}
+
 async function getSurveyById(id) {
     return await Survey.findById(id)
 };
@@ -26,6 +30,7 @@ async function editSurvey(id, surveyData) {
 
 module.exports = {
     getAllSurveys,
+    getAllPublicSurveys,
     getSurveyById,
     getSurveyByCreatorId,
     createSurvey,
