@@ -80,9 +80,18 @@ surveyRouter.use('/', (request, response, next) => {
     next();
 })
 
-// Surveys by creator id
-surveyRouter.get("/createdby/:id", async (request, response) => {
-    let responseData = await getSurveyByCreatorId(request.params.id);
+// Index of survey creators
+surveyRouter.get("/createdby/", async (request, response) => {
+    //TODO List all users who have created a survey
+    response.json({
+        survey: responseData
+    });
+});
+
+// Surveys by creator username
+surveyRouter.get("/createdby/:username", async (request, response) => {
+    let userId = await getUserIdFromUsername(request.params.username);
+    let responseData = await getSurveyByCreatorId(userId);
     response.json({
         survey: responseData
     });
