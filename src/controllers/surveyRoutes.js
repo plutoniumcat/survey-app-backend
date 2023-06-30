@@ -10,25 +10,27 @@ surveyRouter.use('/', (request, response, next) => {
     const authHeader = request.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    // If there is no token set user to null
-    if (token == null) {
+    // If there is no token set user to null and call next middleware
+    if (token == undefined) {
         request.user = null
         next();
     }
     // Verify the token
-    jwt.verify(token, process.env.SECRET_KEY, (error, user) => {
-        if (error) {
-            console.log(error);
-            // TODO - How to show page as if the user is not logged in if token is invalid?
-            // Send 403 forbidden if token could not be verfied
-            return response.sendStatus(403)
-        }
-        // Add user identify to request
-        request.user = user
+    else {
+            jwt.verify(token, process.env.SECRET_KEY, (error, user) => {
+                if (error) {
+                    console.log(error);
+                    // TODO - How to show page as if the user is not logged in if token is invalid?
+                    // Send 403 forbidden if token could not be verfied
+                    return response.sendStatus(403)
+                }
+                // Add user identify to request
+                request.user = user
 
-        // Call next middleware
-        next();
-    })
+                // Call next middleware
+                next();
+        })
+    }
 })
 
 // Routes
