@@ -1,7 +1,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const surveyRouter = express.Router();
+const {User} = require('../models/userModel')
 const { getAllSurveys, getAllPublicSurveys, getSurveyById, getSurveyByCreatorId, createSurvey, editSurvey } = require('./surveyFunctions');
+const { getUserIdFromUsername } = require('./userFunctions')
 
 // Middleware
 // Determine whether a user is logged in or not
@@ -89,8 +91,9 @@ surveyRouter.get("/createdby/:id", async (request, response) => {
 // Create survey
 surveyRouter.post("/create", async (request, response) => {
     // Add current user identity to submitted survey data
-    request.body.surveyData.author = request.user
-    let createdSurvey = await createSurvey(request.body.surveyData)
+    authorId = await getUserIdFromUsername(request.user.username);
+    request.body.surveyData.author = authorId;
+    let createdSurvey = await createSurvey(request.body.surveyData);
     response.json({
         survey: createdSurvey
     });

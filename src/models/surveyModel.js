@@ -9,10 +9,10 @@ const QuestionSchema = new mongoose.Schema({
 });
 
 const SurveySchema = new mongoose.Schema({
-    title: String,
-    author: {type: mongoose.Types.ObjectId, ref: 'User'},
+    title: {type: String, required: true},
+    author: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     description: String,
-    makePublic: Boolean,
+    makePublic: {type: Boolean, default: false},
     introduction: String,
     completionMessage: String,
     questions: {
