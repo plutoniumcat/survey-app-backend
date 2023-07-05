@@ -12,7 +12,7 @@ userRouter.post("/login", async (request, response) => {
   
       if (!user) {
         // User not found
-        return response.status(401).json({ error: 'Invalid credentials' });
+        return response.status(401).json({ error: 'Authentication failed: Invalid username' });
       }
   
       // Compare the password with the hashed password stored in the database
@@ -20,15 +20,17 @@ userRouter.post("/login", async (request, response) => {
   
       if (!isPasswordValid) {
         // Passwords don't match
-        return response.status(401).json({ error: 'Invalid credentials' });
+        return response.status(401).json({ error: 'Authentication failed: Invalid password' });
       }
   
       // Passwords match, user authenticated
-      console.log('Login successful');
-      response.json({ message: 'Login successful' });
+      console.log('Login successful be console');
+
+      return response.status(200).json({ message: 'Login successful be' });
+      
     } catch (error) {
       console.log(error);
-      response.status(500).json({ error: 'Server error' });
+      return response.status(500).json({ error: 'Server error be' });
     }
   });
   
