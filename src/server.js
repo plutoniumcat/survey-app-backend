@@ -10,6 +10,9 @@ const app = express();
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 
+// Import mongoose
+const mongoose = require('mongoose');
+
 // Configure helmet
 const helmet = require('helmet');
 app.use(helmet());
@@ -34,6 +37,19 @@ app.use(cors(corsOptions));
 // Enable JSON
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+// Connect to the db
+async function dbConnect() {
+    try {
+      await mongoose.connect('mongodb://localhost:27017/surveydb');
+      console.log("Database connected!");
+    } catch (error) {
+      console.log(`dbConnect failed, error:`, error);
+    }
+  }
+  
+dbConnect()
+
 
 // Controllers
 const surveyController = require('./controllers/surveyRoutes');
