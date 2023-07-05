@@ -2,6 +2,8 @@ const express = require('express');
 const userRouter = express.Router();
 const User = require('../models/user')
 const bcrypt = require('bcrypt');
+const validator = require('validator');
+
 
 userRouter.post("/login", async (request, response) => {
     const { username, password } = request.body;
@@ -27,7 +29,7 @@ userRouter.post("/login", async (request, response) => {
       console.log('Login successful be console');
 
       return response.status(200).json({ message: 'Login successful be' });
-      
+
     } catch (error) {
       console.log(error);
       return response.status(500).json({ error: 'Server error be' });
@@ -51,6 +53,21 @@ userRouter.post("/register", async (request, response) => {
       const existingUser = await User.findOne({ username });
       if (existingUser) {
         return response.status(400).json({ error: 'Username already exists' });
+      }
+
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        return response.status(400).json({ error: 'Email already exists' });
+      }
+
+      const validator = require('validator');
+      if (!validator.isEmail(email)) {
+        return response.status(400).json({ error: 'Invalid email format.' });
+      }
+
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+      if (!passwordRegex.test(password)) {
+        return response.status(400).json({ error: 'Invalid password format. It should contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit.' });
       }
   
       // Hash the password
