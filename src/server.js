@@ -29,7 +29,7 @@ app.use(helmet.contentSecurityPolicy(
 // Configure CORS
 const cors = require('cors');
 var corsOptions = {
-origin: ["http://localhost:3000", /*TODO: Add url for deployed app */],
+origin: ["http://localhost:3001", /*TODO: Add url for deployed app */],
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
@@ -55,7 +55,7 @@ dbConnect()
 const surveyController = require('./controllers/surveyRoutes');
 app.use('/surveys', surveyController)
 
-const usersController = require('./controllers/usersRoutes');
+const usersController = require('./controllers/userRoutes');
 app.use('/admin', usersController)
 
 // Routes
