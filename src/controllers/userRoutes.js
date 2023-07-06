@@ -3,6 +3,11 @@ const userRouter = express.Router();
 const User = require('../models/user')
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const secretKey = process.env.SECRET_KEY;
+
+
 
 
 userRouter.post("/login", async (request, response) => {
@@ -25,14 +30,16 @@ userRouter.post("/login", async (request, response) => {
         return response.status(401).json({ error: 'Authentication failed: Invalid password' });
       }
   
-      // Passwords match, user authenticated
-      console.log('Login successful be console');
+      const token = jwt.sign({ username: user.username }, `${secretKey}`, { expiresIn: '1h' });
 
-      return response.status(200).json({ message: 'Login successful be' });
+      return response.status(200).json({ 
+        message: 'Login successful',
+        token: token 
+      });
 
     } catch (error) {
       console.log(error);
-      return response.status(500).json({ error: 'Server error be' });
+      return response.status(500).json({ error: 'Server error' });
     }
   });
   
@@ -60,7 +67,6 @@ userRouter.post("/register", async (request, response) => {
         return response.status(400).json({ error: 'Email already exists' });
       }
 
-      const validator = require('validator');
       if (!validator.isEmail(email)) {
         return response.status(400).json({ error: 'Invalid email format.' });
       }
