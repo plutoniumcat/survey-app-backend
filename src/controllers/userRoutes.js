@@ -8,11 +8,29 @@ require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
 
 
+userRouter.post("/verify-token", async (request, response) => {
+  const { authorization } = request.headers;
+  
+  // Extract the token from the Authorization header
+  const token = authorization.split(' ')[1];
+
+  try {
+    // Verify the token
+    jwt.verify(token, secretKey);
+
+    // Token is valid
+    response.status(200).json({ message: 'Token is valid' });
+  } catch (error) {
+    // Token is invalid or expired
+    response.status(401).json({ error: 'Token is invalid or expired' });
+  }
+});
+
 
 
 userRouter.post("/login", async (request, response) => {
     const { username, password } = request.body;
-  
+
     try {
       // Find the user in the database by username
       const user = await User.findOne({ username });
