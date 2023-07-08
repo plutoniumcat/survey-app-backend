@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { databaseConnector } = require('./database');
 
 // Import models to be seeded
-const {User} = require('./models/user');
+const {User} = require('./models/userModel');
 const {Survey} = require('./models/surveyModel');
 
 // Make sure this file can read environment variables.
