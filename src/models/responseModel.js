@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const ResponseSchema = new mongoose.Schema({
     survey: {
       type: mongoose.Types.ObjectId,
@@ -16,3 +18,8 @@ const ResponseSchema = new mongoose.Schema({
       }
     }]
   });
+
+
+  const Response = mongoose.model('Response', ResponseSchema);
+
+  module.exports = {Response};
