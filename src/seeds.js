@@ -108,68 +108,44 @@ databaseConnector(databaseURL).then(() => {
     await Survey.insertMany(surveys);
     console.log("Test surveys inserted into database")
 }) // seed responses based off the seeded surveys.
-.then(async() => {
-    // Retrieve the two surveys seeded. 
-    const survey1 = await Survey.findOne({title: "Test Survey 1"});
-    const survey2 = await Survey.findOne({title: "Test Survey 2"});
+.then(async () => {
+  // Retrieve the two surveys seeded.
+  const survey1 = await Survey.findOne({ title: 'Test Survey 1' });
+  const survey2 = await Survey.findOne({ title: 'Test Survey 2' });
 
-    const responses = [
-        {
-            survey: survey1._id,
-            answers: [
-                {
-                  question: survey1.questions[0]._id, // Question ID for "Do you like this app?"
-                  answer: "Yes"
-                },
-              ]
-        },
-        {
-            survey: survey1._id,
-            answers: [
-              {
-                question: survey1.questions[0]._id, // Question ID for "Do you like this app?"
-                answer: "No"
-              },
-            ]
-          },
-          {
-            survey: survey2._id,
-            answers: [
-              {
-                question: survey2.questions[0]._id, // Question ID for "Do you like this app?"
-                answer: "Yes"
-              },
-              {
-                question: survey2.questions[1]._id, // Question ID for "Tell us your thoughts"
-                answer: "I like it"
-              }
-            ]
-          },
-          {
-            survey: survey2._id,
-            answers: [
-              {
-                question: survey2.questions[0]._id, // Question ID for "Do you like this app?"
-                answer: "No"
-              },
-              {
-                question: survey2.questions[1]._id, // Question ID for "Tell us your thoughts"
-                answer: "I have some feedback"
-              }
-            ]
-          }
-        ];
-
-        // save the responses to the database. 
-        for (const response of responses) {
-            const savedResponse = await Response.create(response);
-            
-            // Push the response ID to the survey's responses array
-            const survey = await Survey.findById(savedResponse.survey);
-            survey.responses.push(savedResponse._id);
-            await survey.save();
-            console.log("Test responses inserted in the database")
-        }        
+  const responses = [
+    {
+      survey_id: survey1._id,
+      answers: ['Yes'],
+    },
+    {
+      survey_id: survey1._id,
+      answers: ['No'],
+    },
+    {
+      survey_id: survey2._id,
+      answers: ['Yes', 'I like it'],
+    },
+    {
+      survey_id: survey2._id,
+      answers: ['No', 'I have some feedback'],
+    },
+  ];
+  
+  // save the responses to the database.
+  for (const response of responses) {
+    const responseInstance = new Response(response);
+  
+    const savedResponse = await responseInstance.save();
+  
+    // Push the response ID to the survey's responses array
+    const survey = await Survey.findById(savedResponse.survey_id);
+    survey.responses.push(savedResponse._id);
+    await survey.save();
+  
+    console.log('Test response inserted in the database');
+  }
+  
 })
 .then(() => {
     // Disconnect from the database.
