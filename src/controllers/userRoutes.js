@@ -4,27 +4,18 @@ const {User} = require('../models/userModel')
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const verifyToken = require('../middleware/verifyToken');
+
+
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
 
 
-userRouter.post("/verify-token", async (request, response) => {
-  const { authorization } = request.headers;
-  
-  // Extract the token from the Authorization header
-  const token = authorization.split(' ')[1];
 
-  try {
-    // Verify the token
-    jwt.verify(token, secretKey);
-
-    // Token is valid
-    response.status(200).json({ message: 'Token is valid' });
-  } catch (error) {
-    // Token is invalid or expired
-    response.status(401).json({ error: 'Token is invalid or expired' });
-  }
+userRouter.post('/verify-token', verifyToken, async (request, response) => {
+  response.status(200).json({ message: 'Token is valid' });
 });
+
 
 
 
@@ -56,7 +47,6 @@ userRouter.post("/login", async (request, response) => {
       });
 
     } catch (error) {
-      console.log(error);
       return response.status(500).json({ error: 'Server error' });
     }
   });
@@ -110,7 +100,6 @@ userRouter.post("/register", async (request, response) => {
       // Send a success response
       response.json({ message: 'Registration successful' });
     } catch (error) {
-      console.log(error);
       response.status(500).json({ error: 'Server error' });
     }
 });
