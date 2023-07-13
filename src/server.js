@@ -75,6 +75,10 @@ app.use('/surveys', surveyController)
 const usersController = require('./controllers/userRoutes');
 app.use('/admin', usersController)
 
+const responsesController = require('./controllers/responseRoutes');
+app.use('/responses', responsesController);
+
+
 // Routes
 app.get('/', (request, response) => {
     response.json({
