@@ -1,18 +1,12 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const responseRouter = express.Router();
 const {Response} = require('../models/responseModel')
-const {getAllResponses, getResponsesBySurveyId, getResponseById} = require('./responseFunctions');
-const {getSurveyById} = require("./surveyFunctions")
-const verifyToken = require('../middleware/verifyToken');
-
-
-// Routes
+const {Survey} = require("../models/surveyModel")
 
 // View all survey responses.
 responseRouter.get('/', async (request, response) => {
     try {
-      let responseData = await getAllResponses();
+      let responseData = await Response.find({})
       response.json({
         responses: responseData
       });
@@ -26,13 +20,13 @@ responseRouter.get('/', async (request, response) => {
 
 responseRouter.get("/survey/:id", async (request, response) => {
   try {
-    const survey = await getSurveyById(request.params.id);
+    const survey = await Survey.findById(request.params.id);
 
     if (!survey) {
       return response.status(404).json({ message: "Survey not found" });
     }
 
-    const responses = await Response.find({ _id: { $in: survey.responses } });
+    const responses = await Response.find({ survey_id: request.params.id });
 
     response.json({ responses });
   } catch (error) {
@@ -41,11 +35,12 @@ responseRouter.get("/survey/:id", async (request, response) => {
   }
 });
 
+
 // View a specific response
 
 responseRouter.get("/:responseid", async (request, response) => {
   try {
-    const surveyResponse = await getResponseById(request.params.responseid);
+    const surveyResponse = await Response.findById(request.params.responseid);
 
     if (!surveyResponse) {
       return response.status(404).json({message: "Response not found"});
@@ -58,93 +53,36 @@ responseRouter.get("/:responseid", async (request, response) => {
   }
 })
 
+// Post a response
+responseRouter.post("/", async (request, response) => {
+  try {
+    const { surveyID, answers } = request.body;
 
+    const survey = await Survey.findById(surveyID);
 
+    if (!survey) {
+      return response.status(404).json({ error: "Survey not found" });
+    } // this realistically won't happen as the survey they are entering should handle this, however for testing. Also potential survey deletion while someone is doing it...
 
+    // Create a new response
+    const responseData = {
+      survey_id: surveyID,
+      answers: answers,
+    };
 
+    const createdResponse = await Response.create(responseData);
 
-// --------------------
+    // push response ID to survey responses array.
+    survey.responses.push(createdResponse._id)
+    await survey.save();
 
+    response.json({ response: createdResponse });
 
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
-
-
-// // Survey by id
-// surveyRouter.get("/:id", async (request, response) => {
-//     let responseData = await getSurveyById(request.params.id);
-//     response.json({
-//         survey: responseData
-//     });
-// });
-
-// // Survey submission message
-// surveyRouter.get("/:id/completed", async (request, response) => {
-//     let responseData = await getSurveyById(request.params.id);
-//     response.json({
-//         message: responseData.completionMessage
-//     });
-// });
-
-// // Middleware
-// // Allow only authenticated users below this point
-// surveyRouter.use('/', (request, response, next) => {
-//     if (!request.user) {
-//         // 401 Unauthorized
-//         return response.sendStatus(401)
-//     }
-//     next();
-// })
-
-// // Index of survey creators
-// surveyRouter.get("/createdby/", async (request, response) => {
-//     //TODO List all users who have created a survey
-//     response.json({
-//         survey: responseData
-//     });
-// });
-
-// // Surveys by creator username
-// surveyRouter.get("/createdby/:username", async (request, response) => {
-//     let userId = await getUserIdFromUsername(request.params.username);
-//     let responseData = await getSurveyByCreatorId(userId);
-//     response.json({
-//         survey: responseData
-//     });
-// });
-
-// // Create survey
-// surveyRouter.post("/create", async (request, response) => {
-//     // Add current user identity to submitted survey data
-//     authorId = await getUserIdFromUsername(request.user.username);
-//     request.body.surveyData.author = authorId;
-//     let createdSurvey = await createSurvey(request.body.surveyData);
-//     response.json({
-//         survey: createdSurvey
-//     });
-// });
-
-// // Edit survey
-// surveyRouter.post("/:id/edit", async (request, response) => {
-//     let editedSurvey = await editSurvey(request.params.id, request.body.surveyData)
-//     response.json({
-//         survey: editedSurvey
-//     });
-// });
-
-// // All responses
-// surveyRouter.get("/responses", async (request, response) => {
-//     // TODO Add functionality
-//     response.json({
-//         message:"View all responses"
-//     });
-// });
-
-// // Responses by survey id
-// surveyRouter.get("/:id/responses", async (request, response) => {
-//     // TODO Add functionality
-//     response.json({
-//         message:"View responses by survey id"
-//     });
-// });
 
 module.exports = responseRouter;
