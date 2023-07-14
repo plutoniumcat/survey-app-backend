@@ -10,7 +10,7 @@ const verifyToken = require('../middleware/verifyToken');
 // Routes
 
 // View all survey responses.
-responseRouter.get('/', verifyToken, async (request, response) => {
+responseRouter.get('/', async (request, response) => {
     try {
       let responseData = await getAllResponses();
       response.json({
@@ -24,7 +24,7 @@ responseRouter.get('/', verifyToken, async (request, response) => {
   
 // View all responses with a specific survey ID.
 
-responseRouter.get("/:id", async (request, response) => {
+responseRouter.get("/survey/:id", async (request, response) => {
   try {
     const survey = await getSurveyById(request.params.id);
 
@@ -41,9 +41,22 @@ responseRouter.get("/:id", async (request, response) => {
   }
 });
 
+// View a specific response
 
+responseRouter.get("/:responseid", async (request, response) => {
+  try {
+    const surveyResponse = await getResponseById(request.params.responseid);
 
-
+    if (!surveyResponse) {
+      return response.status(404).json({message: "Response not found"});
+    } else {
+      return response.json({response: surveyResponse})
+    }
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({error: "Internal server error."})
+  }
+})
 
 
 
