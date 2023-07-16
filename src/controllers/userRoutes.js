@@ -48,7 +48,7 @@ userRouter.post("/login", async (request, response) => {
         return response.status(401).json({ error: 'Authentication failed: Invalid password' });
       }
   
-      const token = jwt.sign({ username: user.username }, `${secretKey}`, { expiresIn: '1h' });
+      const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
 
       return response.status(200).json({ 
         message: 'Login successful',
