@@ -29,7 +29,7 @@ app.use(helmet.contentSecurityPolicy(
 // Configure CORS
 const cors = require('cors');
 var corsOptions = {
-origin: ["http://localhost:3001", /*TODO: Add url for deployed app */],
+origin: ["http://localhost:3001" /*TODO: Add url for deployed app */],
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
