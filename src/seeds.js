@@ -4,6 +4,7 @@ const { databaseConnector } = require('./database');
 // Import models to be seeded
 const {User} = require('./models/userModel');
 const {Survey} = require('./models/surveyModel');
+const { Response } = require('./models/responseModel');
 
 // Make sure this file can read environment variables.
 const dotenv = require('dotenv');
@@ -60,6 +61,7 @@ const surveys = [
     }
 ]
 
+
 var databaseURL = "";
 switch (process.env.NODE_ENV.toLowerCase()) {
     case "test":
@@ -99,17 +101,56 @@ databaseConnector(databaseURL).then(() => {
 })
 .then(async () => {
     let createdUsers = await User.insertMany(users);
-    console.log("Test user data inserted into db");
+    console.log("Test user data inserted into database");
     for (let survey of surveys) {
         survey.author = createdUsers[1].id
     };
     await Survey.insertMany(surveys);
     console.log("Test surveys inserted into database")
+}) // seed responses based off the seeded surveys.
+.then(async () => {
+  // Retrieve the two surveys seeded.
+  const survey1 = await Survey.findOne({ title: 'Test Survey 1' });
+  const survey2 = await Survey.findOne({ title: 'Test Survey 2' });
+
+  const responses = [
+    {
+      survey_id: survey1._id,
+      answers: ['Yes'],
+    },
+    {
+      survey_id: survey1._id,
+      answers: ['No'],
+    },
+    {
+      survey_id: survey2._id,
+      answers: ['Yes', 'I like it'],
+    },
+    {
+      survey_id: survey2._id,
+      answers: ['No', 'I have some feedback'],
+    },
+  ];
+  
+  // save the responses to the database.
+  for (const response of responses) {
+    const responseInstance = new Response(response);
+  
+    const savedResponse = await responseInstance.save();
+  
+    // Push the response ID to the survey's responses array
+    const survey = await Survey.findById(savedResponse.survey_id);
+    survey.responses.push(savedResponse._id);
+    await survey.save();
+  
+    console.log('Test response inserted in the database');
+  }
+  
 })
 .then(() => {
     // Disconnect from the database.
     mongoose.connection.close();
-    console.log("DB seed connection closed.")
+    console.log("Database seed connection closed.")
 });
 
 // To seed database

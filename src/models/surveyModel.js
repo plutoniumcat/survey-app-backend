@@ -18,7 +18,11 @@ const SurveySchema = new mongoose.Schema({
     questions: {
         type: [QuestionSchema],
         required: false
-    }
+    },
+    responses: {
+        type: [mongoose.Types.ObjectId],
+        default: []
+      }
 });
 
 const Survey = mongoose.model('Survey', SurveySchema);
