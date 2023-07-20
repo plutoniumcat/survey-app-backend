@@ -5,54 +5,68 @@ const {User} = require('../models/userModel')
 const { getAllSurveys, getAllPublicSurveys, getSurveyById, getSurveyByCreatorId, createSurvey, editSurvey } = require('./surveyFunctions');
 const { getUserIdFromUsername } = require('./userFunctions')
 
-// Middleware
-// Determine whether a user is logged in or not
-surveyRouter.use('/', (request, response, next) => {
-    // Get authorization header from request and separate out token
-    const authHeader = request.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+// // Middleware
+// // Determine whether a user is logged in or not
+// surveyRouter.use('/', (request, response, next) => {
+//     // Get authorization header from request and separate out token
+//     const authHeader = request.headers['authorization'];
+//     const token = authHeader && authHeader.split(' ')[1];
 
-    // If there is no token set user to null and call next middleware
-    if (token == undefined) {
-        request.user = null
-        next();
-    }
-    // Verify the token
-    else {
-            jwt.verify(token, process.env.SECRET_KEY, (error, user) => {
-                if (error) {
-                    console.log(error);
-                    // TODO - How to show page as if the user is not logged in if token is invalid?
-                    // Send 403 forbidden if token could not be verfied
-                    return response.sendStatus(403)
-                }
-                // Add user identify to request
-                request.user = user
+//     // If there is no token set user to null and call next middleware
+//     if (token == undefined) {
+//         request.user = null
+//         next();
+//     }
+//     // Verify the token
+//     else {
+//             jwt.verify(token, process.env.SECRET_KEY, (error, user) => {
+//                 if (error) {
+//                     console.log(error);
+//                     // TODO - How to show page as if the user is not logged in if token is invalid?
+//                     // Send 403 forbidden if token could not be verfied
+//                     return response.sendStatus(403)
+//                 }
+//                 // Add user identify to request
+//                 request.user = user
 
-                // Call next middleware
-                next();
-        })
-    }
-})
+//                 // Call next middleware
+//                 next();
+//         })
+//     }
+// })
 
-// Routes
-// All surveys
+// // Routes
+// // All surveys
+// surveyRouter.get("/", async (request, response) => {
+//     // If user is logged in, display all surveys
+//     if (request.user) {
+//         let responseData = await getAllSurveys();
+//         response.json({
+//             surveys: responseData
+//         });
+//     }
+//     // If user is not logged in, display only surveys marked as public
+//     else {
+//         let responseData = await getAllPublicSurveys();
+//         response.json({
+//             surveys: responseData
+//         });
+//     }
+// });
+
+// All surveys, no authentication.
 surveyRouter.get("/", async (request, response) => {
-    // If user is logged in, display all surveys
-    if (request.user) {
+    try {
         let responseData = await getAllSurveys();
         response.json({
             surveys: responseData
-        });
+        })
+    } catch(error) {
+        response.status(500).json({
+            error: error
+        })
     }
-    // If user is not logged in, display only surveys marked as public
-    else {
-        let responseData = await getAllPublicSurveys();
-        response.json({
-            surveys: responseData
-        });
-    }
-});
+})
 
 // Survey by id
 surveyRouter.get("/:id", async (request, response) => {
