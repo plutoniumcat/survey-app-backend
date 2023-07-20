@@ -19,6 +19,20 @@ const SurveySchema = new mongoose.Schema({
     type: [QuestionSchema],
     required: false
   }
+    title: {type: String, required: true},
+    author: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
+    description: String,
+    makePublic: {type: Boolean, default: false},
+    introduction: String,
+    completionMessage: String,
+    questions: {
+        type: [QuestionSchema],
+        required: false
+    },
+    responses: {
+        type: [mongoose.Types.ObjectId],
+        default: []
+      }
 });
 
 const Survey = mongoose.model('Survey', SurveySchema);

@@ -6,13 +6,13 @@ const { Survey } = require('../models/surveyModel');
 const { getAllSurveys, getAllPublicSurveys, getSurveyById, getSurveyByCreatorId, createSurvey, editSurvey } = require('./surveyFunctions');
 const { getUserIdFromUsername } = require('./userFunctions');
 const verifyToken = require('../middleware/verifyToken');
-const secretKey = process.env.SECRET_KEY;
+const secretKey = process.env.SECRET_KEY;;
+const verifyToken = require('../middleware/verifyToken');
 
-// Middleware
-// Determine whether a user is logged in or not
+// // Middleware
+// // Determine whether a user is logged in or not
 // surveyRouter.use('/', (request, response, next) => {
 //     // Get authorization header from request and separate out token
-    
 //     const authHeader = request.headers['authorization'];
 //     const token = authHeader && authHeader.split(' ')[1];
 
@@ -39,27 +39,41 @@ const secretKey = process.env.SECRET_KEY;
 //     }
 // })
 
-// Routes
-// All surveys
-surveyRouter.get("/", async (request, response) => {
-    // If user is logged in, display all surveys
-    if (request.user) {
+// // Routes
+// // All surveys
+// surveyRouter.get("/", async (request, response) => {
+//     // If user is logged in, display all surveys
+//     if (request.user) {
+//         let responseData = await getAllSurveys();
+//         response.json({
+//             surveys: responseData
+//         });
+//     }
+//     // If user is not logged in, display only surveys marked as public
+//     else {
+//         let responseData = await getAllPublicSurveys();
+//         response.json({
+//             surveys: responseData
+//         });
+//     }
+// });
+
+// All surveys, no authentication.
+surveyRouter.get("/", verifyToken, async (request, response) => {
+    try {
         let responseData = await getAllSurveys();
         response.json({
             surveys: responseData
-        });
+        })
+    } catch(error) {
+        response.status(500).json({
+            error: error
+        })
     }
-    // If user is not logged in, display only surveys marked as public
-    else {
-        let responseData = await getAllPublicSurveys();
-        response.json({
-            surveys: responseData
-        });
-    }
-});
+})
 
 // Survey by id
-surveyRouter.get("/:id", async (request, response) => {
+surveyRouter.get("/:id", verifyToken, async (request, response) => {
     let responseData = await getSurveyById(request.params.id);
     response.json({
         survey: responseData
