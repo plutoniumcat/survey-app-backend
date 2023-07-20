@@ -101,42 +101,35 @@ surveyRouter.get("/createdby/:username", async (request, response) => {
     });
 });
 
+// Save new survey to db
 surveyRouter.post('/create', verifyToken, async (request, response) => {
-  const { authorization } = request.headers;
+    const { authorization } = request.headers;
+    
+    // Extract the token from the Authorization header
+    const token = authorization.split(' ')[1];
   
-  // Extract the token from the Authorization header
-  const token = authorization.split(' ')[1];
-
-  const surveyData = request.body;
-  console.log(surveyData)
-
-  // get the _id from the JWT.
-  const decoded = jwt.verify(token, secretKey);
-
-  // Create a new survey document
-  const survey = new Survey({
-    ...surveyData.data,
-    author: decoded._id // Set the author based on the decoded _id from the JWT
+    let surveyData = request.body;
+    console.log(surveyData)
+  
+    // get the _id from the JWT.
+    const decoded = jwt.verify(token, secretKey);
+    // Set author as userID
+    surveyData.author = decoded._id
+    
+    try {
+      // Save the survey to the database
+      const savedSurvey = await createSurvey(surveyData);
+      console.log('Survey saved successfully:', savedSurvey);
+      response.status(200).json(savedSurvey);
+    } catch (error) {
+      console.error('Error saving survey to the database:', error);
+      response.status(500).json({ error: 'Error saving survey to the database.' });
+    }
   });
-  
-  try {
-    // Save the survey to the database
-    const savedSurvey = await survey.save();
-    console.log('Survey saved successfully:', savedSurvey);
-    response.status(200).json(savedSurvey);
-  } catch (error) {
-    console.error('Error saving survey to the database:', error);
-    response.status(500).json({ error: 'Error saving survey to the database.' });
-  }
-});
-  
-  
-  
-  
 
 // Edit survey
 surveyRouter.post("/:id/edit", async (request, response) => {
-    let editedSurvey = await editSurvey(request.params.id, request.body.surveyData)
+    let editedSurvey = await editSurvey(request.params.id, request.body)
     response.json({
         survey: editedSurvey
     });
