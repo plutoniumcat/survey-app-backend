@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const surveyRouter = express.Router();
 const {User} = require('../models/userModel')
 const { getAllSurveys, getAllPublicSurveys, getSurveyById, getSurveyByCreatorId, createSurvey, editSurvey } = require('./surveyFunctions');
-const { getUserIdFromUsername } = require('./userFunctions')
+const { getUserIdFromUsername } = require('./userFunctions');
+const verifyToken = require('../middleware/verifyToken');
 
 // // Middleware
 // // Determine whether a user is logged in or not
@@ -55,7 +56,7 @@ const { getUserIdFromUsername } = require('./userFunctions')
 // });
 
 // All surveys, no authentication.
-surveyRouter.get("/", async (request, response) => {
+surveyRouter.get("/", verifyToken, async (request, response) => {
     try {
         let responseData = await getAllSurveys();
         response.json({
@@ -69,7 +70,7 @@ surveyRouter.get("/", async (request, response) => {
 })
 
 // Survey by id
-surveyRouter.get("/:id", async (request, response) => {
+surveyRouter.get("/:id", verifyToken, async (request, response) => {
     let responseData = await getSurveyById(request.params.id);
     response.json({
         survey: responseData

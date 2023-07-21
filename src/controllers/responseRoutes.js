@@ -1,10 +1,11 @@
 const express = require('express');
 const responseRouter = express.Router();
 const {Response} = require('../models/responseModel')
-const {Survey} = require("../models/surveyModel")
+const {Survey} = require("../models/surveyModel");
+const verifyToken = require('../middleware/verifyToken');
 
 // View all survey responses.
-responseRouter.get('/', async (request, response) => {
+responseRouter.get('/', verifyToken, async (request, response) => {
     try {
       let responseData = await Response.find({})
       response.json({
@@ -17,8 +18,7 @@ responseRouter.get('/', async (request, response) => {
   });
   
 // View all responses with a specific survey ID.
-
-responseRouter.get("/survey/:id", async (request, response) => {
+responseRouter.get("/survey/:id", verifyToken, async (request, response) => {
   try {
     const survey = await Survey.findById(request.params.id);
 
@@ -37,8 +37,7 @@ responseRouter.get("/survey/:id", async (request, response) => {
 
 
 // View a specific response
-
-responseRouter.get("/:responseid", async (request, response) => {
+responseRouter.get("/:responseid", verifyToken, async (request, response) => {
   try {
     const surveyResponse = await Response.findById(request.params.responseid);
 
