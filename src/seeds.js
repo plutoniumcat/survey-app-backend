@@ -33,11 +33,13 @@ const surveys = [
         makePublic: true,
         introduction: "Please fill in this survey",
         completionMessage: "Thank you for responding",
+        reviewLink: "www.google.com",
         questions: {
             questionText: "Do you like this app?",
             questionType: "multipleChoice",
             questionOptions: ["Yes", "No", "Other"]
-        } 
+        }
+        
     },
     {
         title: "Test Survey 2",
@@ -46,6 +48,7 @@ const surveys = [
         makePublic: true,
         introduction: "Please fill in this survey",
         completionMessage: "Thank you for responding",
+        reviewLink: "www.google.com",
         questions: [
             {
                 questionText: "Do you like this app?",
@@ -57,7 +60,7 @@ const surveys = [
                 questionType: "shortText",
                 questionOptions: []
             } 
-        ] 
+        ]
     }
 ]
 
