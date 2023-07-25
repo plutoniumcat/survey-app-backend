@@ -18,7 +18,7 @@ const SurveySchema = new mongoose.Schema({
   questions: {
     type: [QuestionSchema],
     required: false
-  }
+  },
     title: {type: String, required: true},
     author: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     description: String,

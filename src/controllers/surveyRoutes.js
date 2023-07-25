@@ -7,7 +7,6 @@ const { getAllSurveys, getAllPublicSurveys, getSurveyById, getSurveyByCreatorId,
 const { getUserIdFromUsername } = require('./userFunctions');
 const verifyToken = require('../middleware/verifyToken');
 const secretKey = process.env.SECRET_KEY;;
-const verifyToken = require('../middleware/verifyToken');
 
 // // Middleware
 // // Determine whether a user is logged in or not
