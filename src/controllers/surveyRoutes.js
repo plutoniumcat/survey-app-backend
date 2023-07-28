@@ -6,6 +6,7 @@ const { Survey } = require('../models/surveyModel');
 const { getAllSurveys, getAllPublicSurveys, getSurveyById, getSurveyByCreatorId, createSurvey, editSurvey } = require('./surveyFunctions');
 const { getUserIdFromUsername } = require('./userFunctions');
 const verifyToken = require('../middleware/verifyToken');
+const checkMakePublic = require('../middleware/checkMakePublic');
 const secretKey = process.env.SECRET_KEY;;
 
 // // Middleware
@@ -72,8 +73,9 @@ surveyRouter.get("/", verifyToken, async (request, response) => {
 })
 
 // Survey by id
-surveyRouter.get("/:id", verifyToken, async (request, response) => {
-    let responseData = await getSurveyById(request.params.id);
+surveyRouter.get("/:id", checkMakePublic, async (request, response) => {
+    // Response data is retrieved by middleware
+    let responseData = request.responseData;
     response.json({
         survey: responseData
     });
