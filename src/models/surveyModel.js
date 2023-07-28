@@ -32,7 +32,8 @@ const SurveySchema = new mongoose.Schema({
     responses: {
         type: [mongoose.Types.ObjectId],
         default: []
-      }
+      },
+    reviewLink: String
 });
 
 const Survey = mongoose.model('Survey', SurveySchema);

@@ -34,6 +34,9 @@ origin: ["http://localhost:3001" /*TODO: Add url for deployed app */],
 };
 app.use(cors(corsOptions));
 
+// Add axios
+const axios = require("axios");
+
 // Enable JSON
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -78,6 +81,8 @@ app.use('/admin', usersController)
 const responsesController = require('./controllers/responseRoutes');
 app.use('/responses', responsesController);
 
+const reCAPTCHAController = require('./controllers/reCAPTCHA');
+app.use('/reCAPTCHA', reCAPTCHAController);
 
 // Routes
 app.get('/', (request, response) => {
