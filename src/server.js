@@ -30,7 +30,7 @@ app.use(helmet.contentSecurityPolicy(
 const cors = require('cors');
 var corsOptions = {
 // origin: ["http://localhost:3001", "https://survey-sorter-fe.onrender.com/", "https://survey-sorter.onrender.com/"],
-origin: ["*"],
+origin: "*",
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
