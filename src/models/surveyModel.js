@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const QuestionSchema = new mongoose.Schema({
   questionText: String,
+  questionDetails: {type: String, required: false},
   questionType: String,
   questionOptions: [{
     type: String
