@@ -103,10 +103,10 @@ userRouter.post("/register", async (request, response) => {
       });
   
       // Save the new user in the database
-      await newUser.save();
-  
+      let userResponseData = await newUser.save();
+
       // Send a success response
-      response.json({ message: 'Registration successful' });
+      response.json({ message: 'Registration successful', username: userResponseData.username });
     } catch (error) {
       response.status(500).json({ error: 'Server error' });
     }
