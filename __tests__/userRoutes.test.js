@@ -1,9 +1,7 @@
 const request = require('supertest');
 const { app } = require('../src/server');
 const { User } = require('../src/models/userModel');
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
 
 // Load environment variables from .env file
 dotenv.config();
