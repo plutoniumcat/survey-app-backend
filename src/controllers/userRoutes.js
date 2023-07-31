@@ -4,12 +4,9 @@ const {User} = require('../models/userModel')
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-const verifyToken = require('../middleware/verifyToken');
-
 
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
-
 
 
 userRouter.post("/verify-token", async (request, response) => {
@@ -30,7 +27,6 @@ userRouter.post("/verify-token", async (request, response) => {
 });
 
 
-
 userRouter.post("/login", async (request, response) => {
     const { username, password } = request.body;
 
@@ -48,7 +44,7 @@ userRouter.post("/login", async (request, response) => {
   
       if (!isPasswordValid) {
         // Passwords don't match
-        return response.status(401).json({ error: 'Authentication failed: Invalid password' });
+        return response.status(401).json({ error: 'Authentication failed: Incorrect password' });
       }
   
       const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });

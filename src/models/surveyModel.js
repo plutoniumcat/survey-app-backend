@@ -8,7 +8,7 @@ const QuestionSchema = new mongoose.Schema({
     type: String
   }]
 });
-
+  
 const SurveySchema = new mongoose.Schema({
   title: [{ type: String, required: true }],
   author: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
