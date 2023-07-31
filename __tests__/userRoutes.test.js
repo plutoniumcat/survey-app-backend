@@ -30,15 +30,22 @@ User.findOne.mockImplementation(async ({ username }) => {
   return null;
 });
 
+
 describe('POST /admin/login', () => {
   it('should login successfully', async () => {
-    // Remaining test code is the same as before...
+    const response = await request(app)
+      .post('/admin/login')
+      .send({ username: 'TestUser4', password: 'TestUser4' });
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Login successful');
+    expect(response.body.token).toBeDefined();
   });
 
   it('should handle invalid username', async () => {
     const response = await request(app)
       .post('/admin/login')
-      .send({ username: 'invaliduser', password: 'validpassword' });
+      .send({ username: 'invaliduser', password: 'TestUser4' });
 
     expect(response.status).toBe(401);
     expect(response.body.error).toBe('Authentication failed: Invalid username');
@@ -65,3 +72,4 @@ describe('POST /admin/login', () => {
     expect(response.body.error).toBe('Server error');
   });
 });
+
