@@ -2,15 +2,13 @@ const mongoose = require('mongoose');
 
 const QuestionSchema = new mongoose.Schema({
   questionText: String,
-  questionDetails: {type: String, required: false},
+  questionDetails: { type: String, required: false },
   questionType: String,
-  questionOptions: [{
-    type: String
-  }]
+  questionOptions: [{ type: String }],
 });
-  
+
 const SurveySchema = new mongoose.Schema({
-  title: [{ type: String, required: true }],
+  title: { type: String, required: true },
   author: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
   description: String,
   makePublic: { type: Boolean, default: false },
@@ -18,24 +16,14 @@ const SurveySchema = new mongoose.Schema({
   completionMessage: String,
   questions: {
     type: [QuestionSchema],
-    required: false
+    required: false,
   },
-    title: {type: String, required: true},
-    author: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
-    description: String,
-    makePublic: {type: Boolean, default: false},
-    introduction: String,
-    completionMessage: String,
-    questions: {
-        type: [QuestionSchema],
-        required: false
-    },
-    responses: {
-        type: [mongoose.Types.ObjectId],
-        default: []
-      },
-    reviewLink: String,
-    dateSubmitted: { type: Date, default: null }
+  responses: {
+    type: [mongoose.Types.ObjectId],
+    default: [],
+  },
+  reviewLink: String,
+  dateSubmitted: { type: Date, default: null },
 });
 
 const Survey = mongoose.model('Survey', SurveySchema);
