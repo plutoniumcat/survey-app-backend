@@ -10,6 +10,13 @@ const { Response } = require('./models/responseModel');
 const dotenv = require('dotenv');
 dotenv.config();
 
+// Get the current date
+const currentDate = new Date();
+
+// Create a new date object representing yesterday
+const yesterday = new Date(currentDate);
+yesterday.setDate(currentDate.getDate() - 1);
+
 // Create raw data to seed users
 const users = [
     {
@@ -38,7 +45,8 @@ const surveys = [
             questionText: "Do you like this app?",
             questionType: "multipleChoice",
             questionOptions: ["Yes", "No", "Other"]
-        }
+        },
+        dateSubmitted: currentDate
         
     },
     {
@@ -49,6 +57,7 @@ const surveys = [
         introduction: "Please fill in this survey",
         completionMessage: "Thank you for responding",
         reviewLink: "www.google.com",
+        dateSubmitted: yesterday,
         questions: [
             {
                 questionText: "Do you like this app?",
@@ -98,7 +107,7 @@ databaseConnector(databaseURL).then(() => {
         collections.map((collection) => collection.name)
         .forEach(async (collectionName) => {
             mongoose.connection.db.dropCollection(collectionName);
-        });
+        }); 
         console.log("All old collections dropped from database.");
     }
 })
@@ -119,18 +128,30 @@ databaseConnector(databaseURL).then(() => {
   const responses = [
     {
       survey_id: survey1._id,
-      answers: ['Yes'],
-    },
+      dateSubmitted: currentDate,
+      answers: [{
+        "optionId": 1,
+        "text": "Yes"
+    }]},
+
     {
       survey_id: survey1._id,
-      answers: ['No'],
-    },
+      dateSubmitted: yesterday,
+      answers: [{
+        "optionId": 2,
+        "text": "No"
+    }]},
+
     {
       survey_id: survey2._id,
+      dateSubmitted: currentDate,
       answers: ['Yes', 'I like it'],
     },
+
+
     {
       survey_id: survey2._id,
+      dateSubmitted: yesterday,
       answers: ['No', 'I have some feedback'],
     },
   ];

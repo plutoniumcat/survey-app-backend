@@ -12,6 +12,7 @@ const ResponseSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  dateSubmitted: { type: Date, default: null }
 });
 
 const Response = mongoose.model('Response', ResponseSchema);
