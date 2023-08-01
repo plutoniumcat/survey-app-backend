@@ -55,9 +55,9 @@ responseRouter.get("/:responseid", verifyToken, async (request, response) => {
 // Post a response
 responseRouter.post("/", async (request, response) => {
   try {
-    const { surveyID, answers } = request.body;
+    const { surveyId, answers } = request.body;
 
-    const survey = await Survey.findById(surveyID);
+    const survey = await Survey.findById(surveyId);
 
     if (!survey) {
       return response.status(404).json({ error: "Survey not found" });
@@ -65,7 +65,7 @@ responseRouter.post("/", async (request, response) => {
 
     // Create a new response
     const responseData = {
-      survey_id: surveyID,
+      survey_id: surveyId,
       answers: answers,
     };
 
