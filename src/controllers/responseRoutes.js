@@ -67,6 +67,7 @@ responseRouter.post("/", async (request, response) => {
     const responseData = {
       survey_id: surveyId,
       answers: answers,
+      dateSubmitted: new Date()
     };
 
     const createdResponse = await Response.create(responseData);
