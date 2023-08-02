@@ -154,20 +154,20 @@ surveyRouter.post("/:id/edit", async (request, response) => {
     });
 });
 
-// All responses
-surveyRouter.get("/responses", async (request, response) => {
-    // TODO Add functionality
-    response.json({
-        message:"View all responses"
-    });
-});
+// // All responses
+// surveyRouter.get("/responses", async (request, response) => {
+//     // TODO Add functionality
+//     response.json({
+//         message:"View all responses"
+//     });
+// });
 
-// Responses by survey id
-surveyRouter.get("/:id/responses", async (request, response) => {
-    // TODO Add functionality
-    response.json({
-        message:"View responses by survey id"
-    });
-});
+// // Responses by survey id
+// surveyRouter.get("/:id/responses", async (request, response) => {
+//     // TODO Add functionality
+//     response.json({
+//         message:"View responses by survey id"
+//     });
+// });
 
 module.exports = surveyRouter;

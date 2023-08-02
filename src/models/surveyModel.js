@@ -14,6 +14,7 @@ const SurveySchema = new mongoose.Schema({
   makePublic: { type: Boolean, default: false },
   introduction: String,
   completionMessage: String,
+  reviewLink: { type: String, required: false },
   questions: {
     type: [QuestionSchema],
     required: false,
