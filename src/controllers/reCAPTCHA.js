@@ -11,12 +11,10 @@ reCAPTCHARouter.post('/', async (req, res) => {
     const response = await axios.post(
       `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.REACT_APP_SECRET_KEY}&response=${token}`
     );
-
     // Check response status and send back to the client-side
     if (response.data.success) {
       res.send("Human 👨 👩");
     } else {
-      console.log(token)
       res.send("Robot 🤖");
     }
   } catch (error) {
