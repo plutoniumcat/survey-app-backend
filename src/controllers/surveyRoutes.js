@@ -89,15 +89,6 @@ surveyRouter.get("/:id/completed", async (request, response) => {
     });
 });
 
-// Middleware
-// Allow only authenticated users below this point
-// surveyRouter.use('/', (request, response, next) => {
-//     if (!request.user) {
-//         // 401 Unauthorized
-//         return response.sendStatus(401)
-//     }
-//     next();
-// })
 
 // Index of survey creators
 surveyRouter.get("/createdby/", async (request, response) => {
@@ -142,8 +133,8 @@ surveyRouter.post('/create', verifyToken, async (request, response) => {
         // Log a custom error message without crashing the application
         console.error('Error saving survey to the database:');
         response.status(500).json({ error: 'Error saving survey to the database.' });
-      }
-  });
+    }
+});
   
 
 // Edit survey
@@ -154,20 +145,33 @@ surveyRouter.post("/:id/edit", async (request, response) => {
     });
 });
 
-// // All responses
-// surveyRouter.get("/responses", async (request, response) => {
-//     // TODO Add functionality
-//     response.json({
-//         message:"View all responses"
-//     });
-// });
 
-// // Responses by survey id
-// surveyRouter.get("/:id/responses", async (request, response) => {
-//     // TODO Add functionality
-//     response.json({
-//         message:"View responses by survey id"
-//     });
-// });
+surveyRouter.get('/staff/:staffid', verifyToken, async (request, response) => {
+    try {
+        const staffId = request.params.staffid;
+        const surveys = await getSurveyByCreatorId(staffId);
+        response.status(200).json(surveys);
+    } catch (error) {
+        const staffId = request.params.staffid;
+        console.log(staffId);
+        console.error('Error fetching surveys by staff ID:', error);
+        response.status(500).json({ error: 'Error fetching surveys by staff ID.' });
+    }
+});
+
+// surveyRouter.get("/", verifyToken, async (request, response) => {
+//     try {
+//         let responseData = await getAllSurveys();
+//         response.json({
+//             surveys: responseData
+//         })
+//     } catch(error) {
+//         response.status(500).json({
+//             error: error
+//         })
+//     }
+// })
+
+
 
 module.exports = surveyRouter;
